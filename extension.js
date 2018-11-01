@@ -2,9 +2,11 @@ const Overview = imports.ui.main.overview;
 
 // did we activate the overview?
 let _active = false;
+let _wmanager = global.workspace_manager || global.screen;
+let _display  = global.display || global.screen;
 
 function check() {
-  if (!global.screen.get_active_workspace().list_windows().length) {
+  if (!_wmanager.get_active_workspace().list_windows().length) {
     // workspace empty
     if (!Overview.visible) {
       _active = true;
@@ -19,12 +21,15 @@ function check() {
   }
 }
 
-let _handles = [];
+let _switchHandle = null;
+let _restackHandle = null;
 
 function enable() {
-  _handles = ['workspace-switched', 'restacked'].map(s => global.screen.connect(s, check));
+  _switchHandle  = _wmanager.connect('workspace-switched', check);
+  _restackHandle = _display.connect('restacked', check);
 }
 
 function disable() {
-  _handles.forEach(h => global.screen.disconnect(h));
+  _wmanager.disconnect(_switchHandle);
+  _display.disconnect(_restackHandle);
 }
