@@ -2,14 +2,12 @@ const Overview = imports.ui.main.overview;
 
 // did we activate the overview?
 let _active = false;
+let _wmanager = global.workspace_manager;
+let _display  = global.display;
 if (global.hasOwnProperty( 'screen' ) ) {
   // GNOME 3.28 or older
   let _wmanager = global.workspace_manager || global.screen;
   let _display  = global.display || global.screen;
-} else {
-  // GNOME 3.30+
-  let _wmanager = global.workspace_manager;
-  let _display  = global.display;
 }
 
 function check() {
